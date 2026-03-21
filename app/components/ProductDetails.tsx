@@ -71,10 +71,6 @@ export default function ProductDetails({ id, nombre, precio, imageUrl, descripti
           {/* PRODUCT INFO BLOCKS */}
           <div className="flex flex-col pt-4 lg:pt-10 sticky top-32">
             
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 border border-zinc-200/50 text-xs font-bold tracking-widest uppercase mb-6 text-zinc-600 self-start">
-              Limited Edition
-            </div>
-
             <h1 className="text-5xl md:text-7xl font-black text-zinc-900 tracking-tighter uppercase mb-4 leading-[0.9]">
               {nombre}
             </h1>
