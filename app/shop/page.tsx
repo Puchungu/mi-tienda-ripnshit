@@ -134,39 +134,43 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
             const targetUrl = `/product/${producto.documentId || producto.id}`;
 
             return (
-              <a href={targetUrl} key={producto.id} className="group relative flex flex-col bg-transparent cursor-pointer">
+              <Link href={targetUrl} key={producto.id} className="block outline-none">
+                <div className="group relative flex flex-col bg-transparent cursor-pointer h-full">
 
-                {/* Image Wrapper */}
-                <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-zinc-100 mb-5 flex items-center justify-center border border-zinc-200/50">
-                  <img
-                    src={imageUrl}
-                    alt={producto.Nombre}
-                    className="object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
+                  {/* Image Wrapper */}
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-zinc-100 mb-5 flex items-center justify-center border border-zinc-200/50 group-hover:border-zinc-400 transition-colors duration-500">
+                    <img
+                      src={imageUrl}
+                      alt={producto.Nombre}
+                      className="object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-110"
+                    />
 
-                  {/* Subtle gradient overlay at bottom of image */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {/* Dark gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                  {/* Quick View Button */}
-                  <div className="absolute inset-x-0 bottom-0 p-4 opacity-0 transform translate-y-4 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-y-0">
-                    <button className="w-full py-3.5 bg-white/90 backdrop-blur-md text-zinc-900 font-black text-sm uppercase tracking-wider rounded-xl shadow-xl hover:bg-white transition-colors">
-                      Quick Add
-                    </button>
+                    {/* Center 'View Details' Pill */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 ease-out pointer-events-none">
+                      <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md text-white font-bold text-xs uppercase tracking-widest px-6 py-3 rounded-full border border-white/30 shadow-2xl">
+                        Ver Detalles
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="flex flex-col space-y-1.5 px-1 transform transition-transform duration-500 group-hover:translate-x-2">
+                    <div className="flex justify-between items-start gap-4">
+                      <h3 className="text-lg font-bold text-zinc-900 leading-tight group-hover:text-purple-600 transition-colors duration-300">
+                        {producto.Nombre}
+                      </h3>
+                      <p className="text-lg font-black text-zinc-900">
+                        ${producto.Precio}
+                      </p>
+                    </div>
+                    {/* Descripcion property not shown on Shop grid currently, but keeping structure clean */}
                   </div>
                 </div>
-
-                {/* Product Info */}
-                <div className="flex flex-col space-y-1.5 px-1">
-                  <div className="flex justify-between items-start gap-4">
-                    <h3 className="text-lg font-bold text-zinc-900 leading-tight">
-                      {producto.Nombre}
-                    </h3>
-                    <p className="text-lg font-black text-zinc-900 whitespace-nowrap">
-                      ${producto.Precio}
-                    </p>
-                  </div>
-                </div>
-              </a>
+              </Link>
             );
           })}
         </div>

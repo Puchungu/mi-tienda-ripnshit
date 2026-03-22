@@ -2,24 +2,53 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 
 export default function CartDrawer() {
   const { cart, isCartOpen, setIsCartOpen, removeItem, updateQuantity, totalPrice } = useCart();
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
 
   if (!isCartOpen) return null;
+
+  const handleCheckout = async () => {
+    try {
+      setIsCheckoutLoading(true);
+      
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items: cart }),
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("Checkout validation failed:", data.error);
+        alert("Hubo un problema al procesar el pago. Por favor intenta de nuevo.");
+      }
+    } catch (error) {
+      console.error("Checkout Request Error:", error);
+      alert("Hubo un error de conexión. Verifica tu internet e intenta de nuevo.");
+    } finally {
+      setIsCheckoutLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-black/70 backdrop-blur-xl transition-opacity"
         onClick={() => setIsCartOpen(false)}
       />
 
       {/* Drawer */}
-      <div className="relative w-full max-w-md bg-white/90 backdrop-blur-xl h-full shadow-2xl flex flex-col border-l border-zinc-200 animate-slide-in-right">
+      <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col border-l border-zinc-200 animate-slide-in-right">
         {/* Header */}
         <div className="p-6 border-b border-zinc-200 flex justify-between items-center">
           <h2 className="text-2xl font-black uppercase tracking-tighter">Tu Carrito</h2>
@@ -99,14 +128,29 @@ export default function CartDrawer() {
               <span className="text-3xl font-black tracking-tighter">${totalPrice}</span>
             </div>
             
-            <button className="group relative w-full inline-flex items-center justify-center px-8 py-5 text-sm font-bold uppercase tracking-widest text-white bg-zinc-900 rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-2xl shadow-zinc-900/20">
+            <button 
+              onClick={handleCheckout}
+              disabled={isCheckoutLoading}
+              className={`group relative w-full inline-flex items-center justify-center px-8 py-5 text-sm font-bold uppercase tracking-widest text-white bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl shadow-zinc-900/20 transition-all ${isCheckoutLoading ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02] active:scale-95'}`}
+            >
               <span className="relative z-10 flex gap-2 items-center">
-                Finalizar Compra
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                {isCheckoutLoading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    Procesando...
+                  </>
+                ) : (
+                  <>
+                    Finalizar Compra
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  </>
+                )}
               </span>
-              <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-purple-600 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              {!isCheckoutLoading && (
+                <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-purple-600 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              )}
             </button>
-            <p className="text-[10px] text-center text-zinc-400 font-bold uppercase tracking-widest">Impuestos y envío calculados al finalizar</p>
+            <p className="text-[10px] text-center text-zinc-400 font-bold uppercase tracking-widest">Pago seguro vía Stripe</p>
           </div>
         )}
       </div>

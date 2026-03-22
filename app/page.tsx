@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { extractTextFromBlocks } from './utils/strapi';
+import CountdownTimer from './components/CountdownTimer';
 
 
 interface Product {
@@ -33,11 +34,15 @@ export default async function Home() {
   const { data: productos } = await getProductos();
   const STRAPI_URL = "http://127.0.0.1:1337";
 
+  // Set target date for the next drop (7 days from now)
+  const targetDate = new Date();
+  targetDate.setDate(targetDate.getDate() + 7);
+
   return (
     <div className="selection:bg-purple-300 selection:text-purple-900">
 
       {/* HERO SECTION */}
-      <section className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden pt-20">
+      <section className="relative w-full min-h-[90vh] flex items-center justify-center overflow-hidden pt-32 pb-20">
         {/* Decorative Blurred Blobs */}
         <div className="absolute top-[10%] left-[10%] w-[500px] h-[500px] bg-purple-300/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-pulse" />
         <div className="absolute top-[20%] right-[10%] w-[400px] h-[400px] bg-rose-300/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70" />
@@ -60,10 +65,12 @@ export default async function Home() {
             Elevating modern streetwear. Clean lines, bold expressions, and strictly aesthetic vibes for the youth.
           </p>
 
-          <a href="#shop" className="group relative inline-flex items-center justify-center px-8 py-4 text-sm font-bold uppercase tracking-widest text-white bg-zinc-900 rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-xl shadow-zinc-900/20">
+          <CountdownTimer targetDate={targetDate.toISOString()} />
+
+          <Link href="/collections" className="group relative inline-flex items-center justify-center px-10 py-5 text-sm font-bold uppercase tracking-widest text-white bg-zinc-900 rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-xl shadow-zinc-900/20 mt-12">
             <span className="relative z-10">Shop Collection</span>
             <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-purple-600 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -90,40 +97,40 @@ export default async function Home() {
             }
 
             return (
-              <Link href={`/product/${producto.documentId || producto.id}`} key={producto.documentId || producto.id} className="group relative flex flex-col bg-transparent cursor-pointer">
+              <Link href={`/product/${producto.documentId || producto.id}`} key={producto.documentId || producto.id} className="block outline-none">
+                <div className="group relative flex flex-col bg-transparent cursor-pointer h-full">
 
-                {/* Image Wrapper */}
-                <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-zinc-100 mb-5 flex items-center justify-center border border-zinc-200/50">
-                  <img
-                    src={imageUrl}
-                    alt={producto.Nombre}
-                    className="object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
+                  {/* Image Wrapper */}
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-zinc-100 mb-5 flex items-center justify-center border border-zinc-200/50 group-hover:border-zinc-400 transition-colors duration-500">
+                    <img
+                      src={imageUrl}
+                      alt={producto.Nombre}
+                      className="object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-110"
+                    />
 
-                  {/* Subtle gradient overlay at bottom of image */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {/* Dark gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                  {/* Quick View Button (appears on hover) */}
-                  <div className="absolute inset-x-0 bottom-0 p-4 opacity-0 transform translate-y-4 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-y-0">
-                    <button className="w-full py-3.5 bg-white/90 backdrop-blur-md text-zinc-900 font-black text-sm uppercase tracking-wider rounded-xl shadow-xl hover:bg-white transition-colors">
-                      Quick Add
-                    </button>
+                    {/* Center 'View Details' Pill */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 ease-out pointer-events-none">
+                      <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md text-white font-bold text-xs uppercase tracking-widest px-6 py-3 rounded-full border border-white/30 shadow-2xl">
+                        Ver Detalles
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                {/* Product Info */}
-                <div className="flex flex-col space-y-1.5 px-1">
-                  <div className="flex justify-between items-start gap-4">
-                    <h3 className="text-lg font-bold text-zinc-900 leading-tight">
-                      {producto.Nombre}
-                    </h3>
-                    <p className="text-lg font-black text-zinc-900 whitespace-nowrap">
-                      ${producto.Precio}
-                    </p>
+                  {/* Product Info */}
+                  <div className="flex flex-col space-y-1.5 px-1 transform transition-transform duration-500 group-hover:translate-x-2">
+                    <div className="flex justify-between items-start gap-4">
+                      <h3 className="text-lg font-bold text-zinc-900 leading-tight group-hover:text-purple-600 transition-colors duration-300">
+                        {producto.Nombre}
+                      </h3>
+                      <p className="text-lg font-black text-zinc-900">
+                        ${producto.Precio}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm font-medium text-zinc-500 line-clamp-1">
-                    {extractTextFromBlocks(producto.Descripcion)}
-                  </p>
                 </div>
               </Link>
             );

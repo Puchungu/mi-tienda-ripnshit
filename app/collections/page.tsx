@@ -1,4 +1,4 @@
-// app/collections/page.tsx
+import Link from 'next/link';
 
 // app/collections/page.tsx
 
@@ -7,7 +7,7 @@ interface Collection {
   documentId?: string;
   Nombre: string;
   Descripcion: string;
-  Slug: string;
+  Slug?: string;
   ImagenPortada?: {
     url: string;
   } | { url: string }[] | null;
@@ -59,10 +59,10 @@ export default async function CollectionsPage() {
           <p className="text-zinc-400 font-medium text-lg max-w-md mx-auto mb-6">
             There are currently no active collections. New aesthetic drops are coming soon.
           </p>
-          <a href="/" className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-zinc-900 hover:text-purple-600 transition-colors">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-zinc-900 hover:text-purple-600 transition-colors">
             Back to Shop
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
+          </Link>
         </div>
 
       ) : (
@@ -72,16 +72,18 @@ export default async function CollectionsPage() {
           {collections.map((collection) => {
             let imageUrl = "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1000&auto=format&fit=crop";
 
-            if (collection.ImagenPortada && !Array.isArray(collection.ImagenPortada) && collection.ImagenPortada.url) {
-              imageUrl = `${STRAPI_URL}${collection.ImagenPortada.url}`;
+            if (collection.ImagenPortada && !Array.isArray(collection.ImagenPortada) && (collection.ImagenPortada as any).url) {
+              imageUrl = `${STRAPI_URL}${(collection.ImagenPortada as any).url}`;
             } else if (Array.isArray(collection.ImagenPortada) && collection.ImagenPortada.length > 0 && collection.ImagenPortada[0].url) {
               imageUrl = `${STRAPI_URL}${collection.ImagenPortada[0].url}`;
             }
 
-            const targetUrl = collection.Slug ? `/collections/${collection.Slug}` : `/collections/${collection.documentId || collection.id}`;
+            // PRIORITIZE documentId for V5 stability
+            const targetId = collection.documentId || collection.id.toString();
+            const targetUrl = collection.Slug ? `/collections/${collection.Slug}` : `/collections/${targetId}`;
 
             return (
-              <a href={targetUrl} key={collection.id} className="group relative flex flex-col bg-transparent cursor-pointer">
+              <Link href={targetUrl} key={collection.id} className="group relative flex flex-col bg-transparent cursor-pointer">
                 
                 {/* Image Wrapper */}
                 <div className="relative aspect-[3/4] overflow-hidden rounded-3xl bg-zinc-100 flex items-center justify-center border border-zinc-200/50">
@@ -110,7 +112,7 @@ export default async function CollectionsPage() {
                     </div>
                   </div>
                 </div>
-              </a>
+              </Link>
             );
           })}
         </div>

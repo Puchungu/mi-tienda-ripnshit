@@ -2,17 +2,30 @@
 
 'use client';
 
+import { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import MobileMenu from './MobileMenu';
 
 export default function Header() {
   const { totalItems, setIsCartOpen } = useCart();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <header className="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-md border-b border-zinc-200/50">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        {/* Mobile Menu Toggle */}
+        <button 
+          onClick={() => setIsMenuOpen(true)}
+          className="md:hidden p-2 text-zinc-900 hover:bg-zinc-100 rounded-full transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+
         <a href="/" className="text-2xl font-black tracking-tighter uppercase text-zinc-900 transition-opacity hover:opacity-80">
           Rip<span className="text-purple-600">N</span>Shit.
         </a>
+
+        {/* Desktop Nav */}
         <nav className="hidden md:flex gap-8 text-sm font-bold tracking-widest uppercase text-zinc-500">
           <a href="/shop" className="hover:text-zinc-900 transition-colors">Shop</a>
           <a href="/collections" className="hover:text-zinc-900 transition-colors">Collections</a>
@@ -32,6 +45,8 @@ export default function Header() {
           )}
         </button>
       </div>
+
+      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </header>
   );
 }
