@@ -29,9 +29,11 @@ interface StrapiCategoryResponse {
   meta: unknown;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337";
+
 async function getCategories(): Promise<Category[]> {
   try {
-    const res = await fetch('http://127.0.0.1:1337/api/categories', { cache: 'no-store' });
+    const res = await fetch(`${API_URL}/api/categories`, { cache: 'no-store' });
     if (!res.ok) return [];
     const json: StrapiCategoryResponse = await res.json();
     return json.data || [];
@@ -43,7 +45,7 @@ async function getCategories(): Promise<Category[]> {
 
 async function getProductos(categoryName?: string): Promise<Product[]> {
   try {
-    let url = 'http://127.0.0.1:1337/api/productos?populate=*';
+    let url = `${API_URL}/api/productos?populate=*`;
     if (categoryName) {
       url += `&filters[category][Nombre][$eq]=${encodeURIComponent(categoryName)}`;
     }
@@ -67,7 +69,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
     getProductos(currentCategory || undefined)
   ]);
 
-  const STRAPI_URL = "http://127.0.0.1:1337";
+  const STRAPI_URL = API_URL;
 
   return (
     <div className="selection:bg-purple-300 selection:text-purple-900 pt-32 pb-24 px-6 max-w-7xl mx-auto min-h-screen">

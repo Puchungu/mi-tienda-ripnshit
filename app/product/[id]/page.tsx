@@ -13,10 +13,12 @@ interface Product {
   Variantes?: any[];
 }
 
+const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337";
+
 async function getProducto(id: string): Promise<Product | null> {
   try {
     // Explicitly populate Imagen and Variantes for Strapi V5
-    const res = await fetch(`http://127.0.0.1:1337/api/productos/${id}?populate[0]=Imagen&populate[1]=Variantes`, { cache: 'no-store' });
+    const res = await fetch(`${API_URL}/api/productos/${id}?populate[0]=Imagen&populate[1]=Variantes`, { cache: 'no-store' });
     if (!res.ok) {
       return null;
     }
@@ -36,7 +38,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     notFound();
   }
 
-  const STRAPI_URL = "http://127.0.0.1:1337";
+  const STRAPI_URL = API_URL;
 
   // Robust Image URL handling for Strapi V5
   let imageUrl = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop";

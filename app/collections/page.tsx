@@ -20,9 +20,11 @@ interface StrapiResponse {
   meta: unknown;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337";
+
 async function getCollections(): Promise<Collection[]> {
   try {
-    const res = await fetch('http://127.0.0.1:1337/api/collections?populate=*', { cache: 'no-store' });
+    const res = await fetch(`${API_URL}/api/collections?populate=*`, { cache: 'no-store' });
     if (!res.ok) {
       return [];
     }
@@ -36,7 +38,7 @@ async function getCollections(): Promise<Collection[]> {
 
 export default async function CollectionsPage() {
   const collections = await getCollections();
-  const STRAPI_URL = "http://127.0.0.1:1337";
+  const STRAPI_URL = API_URL;
 
   return (
     <div className="selection:bg-purple-300 selection:text-purple-900 pt-32 pb-24 px-6 max-w-7xl mx-auto min-h-screen">

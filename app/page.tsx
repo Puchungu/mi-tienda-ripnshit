@@ -20,8 +20,10 @@ interface StrapiResponse {
 }
 
 // 1. Función para pedir los datos a Strapi
+const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337";
+
 async function getProductos(): Promise<StrapiResponse> {
-  const res = await fetch('http://127.0.0.1:1337/api/productos?populate=*', { cache: 'no-store' });
+  const res = await fetch(`${API_URL}/api/productos?populate=*`, { cache: 'no-store' });
 
   if (!res.ok) {
     throw new Error('Fallo al traer los datos');
@@ -32,7 +34,7 @@ async function getProductos(): Promise<StrapiResponse> {
 
 export default async function Home() {
   const { data: productos } = await getProductos();
-  const STRAPI_URL = "http://127.0.0.1:1337";
+  const STRAPI_URL = API_URL;
 
   // Set target date for the next drop (7 days from now)
   const targetDate = new Date();

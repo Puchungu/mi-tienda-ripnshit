@@ -21,8 +21,10 @@ interface Collection {
   productos: Product[];
 }
 
+const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337";
+
 async function getCollection(id: string): Promise<Collection | null> {
-  const STRAPI_BASE = 'http://127.0.0.1:1337/api/collections';
+  const STRAPI_BASE = `${API_URL}/api/collections`;
   // Use =true for media fields in V5 to avoid ValidationError on related nested relations
   const queryParams = 'populate[productos][populate]=*&populate[ImagenPortada]=true';
 
@@ -70,7 +72,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
     notFound();
   }
 
-  const STRAPI_URL = "http://127.0.0.1:1337";
+  const STRAPI_URL = API_URL;
 
   // Collection Cover Image logic
   let coverImageUrl = "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1200";
