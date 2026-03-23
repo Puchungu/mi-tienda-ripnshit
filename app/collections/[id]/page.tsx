@@ -78,9 +78,11 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
   let coverImageUrl = "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1200";
   if (collection.ImagenPortada) {
     if (!Array.isArray(collection.ImagenPortada) && collection.ImagenPortada.url) {
-      coverImageUrl = `${STRAPI_URL}${collection.ImagenPortada.url}`;
+      const url = collection.ImagenPortada.url;
+      coverImageUrl = url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
     } else if (Array.isArray(collection.ImagenPortada) && collection.ImagenPortada.length > 0 && collection.ImagenPortada[0].url) {
-      coverImageUrl = `${STRAPI_URL}${collection.ImagenPortada[0].url}`;
+      const url = collection.ImagenPortada[0].url;
+      coverImageUrl = url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
     }
   }
 
@@ -131,9 +133,11 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
               let productImageUrl = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop";
               if (producto.Imagen) {
                 if (!Array.isArray(producto.Imagen) && producto.Imagen.url) {
-                  productImageUrl = `${STRAPI_URL}${producto.Imagen.url}`;
+                  const url = producto.Imagen.url;
+                  productImageUrl = url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
                 } else if (Array.isArray(producto.Imagen) && producto.Imagen.length > 0 && producto.Imagen[0].url) {
-                  productImageUrl = `${STRAPI_URL}${producto.Imagen[0].url}`;
+                  const url = producto.Imagen[0].url;
+                  productImageUrl = url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
                 }
               }
 

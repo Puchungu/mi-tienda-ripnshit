@@ -44,9 +44,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   let imageUrl = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop";
   if (producto.Imagen) {
     if (!Array.isArray(producto.Imagen) && producto.Imagen.url) {
-      imageUrl = `${STRAPI_URL}${producto.Imagen.url}`;
+      const url = producto.Imagen.url;
+      imageUrl = url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
     } else if (Array.isArray(producto.Imagen) && producto.Imagen.length > 0 && producto.Imagen[0].url) {
-      imageUrl = `${STRAPI_URL}${producto.Imagen[0].url}`;
+      const url = producto.Imagen[0].url;
+      imageUrl = url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
     }
   }
 

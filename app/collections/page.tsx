@@ -77,9 +77,11 @@ export default async function CollectionsPage() {
             let imageUrl = "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1000&auto=format&fit=crop";
 
             if (collection.ImagenPortada && !Array.isArray(collection.ImagenPortada) && (collection.ImagenPortada as any).url) {
-              imageUrl = `${STRAPI_URL}${(collection.ImagenPortada as any).url}`;
+              const url = (collection.ImagenPortada as any).url;
+              imageUrl = url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
             } else if (Array.isArray(collection.ImagenPortada) && collection.ImagenPortada.length > 0 && collection.ImagenPortada[0].url) {
-              imageUrl = `${STRAPI_URL}${collection.ImagenPortada[0].url}`;
+              const url = collection.ImagenPortada[0].url;
+              imageUrl = url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
             }
 
             // PRIORITIZE documentId for V5 stability

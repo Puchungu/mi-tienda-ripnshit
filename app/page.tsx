@@ -93,9 +93,9 @@ export default async function Home() {
             let imageUrl = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop";
 
             if (producto.Imagen && !Array.isArray(producto.Imagen) && producto.Imagen.url) {
-              imageUrl = `${STRAPI_URL}${producto.Imagen.url}`;
+              imageUrl = producto.Imagen.url.startsWith('http') ? producto.Imagen.url : `${STRAPI_URL}${producto.Imagen.url}`;
             } else if (Array.isArray(producto.Imagen) && producto.Imagen.length > 0 && producto.Imagen[0].url) {
-              imageUrl = `${STRAPI_URL}${producto.Imagen[0].url}`;
+              imageUrl = producto.Imagen[0].url.startsWith('http') ? producto.Imagen[0].url : `${STRAPI_URL}${producto.Imagen[0].url}`;
             }
 
             return (
