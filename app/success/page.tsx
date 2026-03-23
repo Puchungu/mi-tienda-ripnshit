@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext';
 import { useSearchParams } from 'next/navigation';
 
-export default function SuccessPage() {
+function SuccessContent() {
   const { clearCart } = useCart();
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
@@ -74,3 +74,10 @@ export default function SuccessPage() {
   );
 }
 
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-zinc-50 flex items-center justify-center">Loading...</div>}>
+      <SuccessContent />
+    </Suspense>
+  );
+}
